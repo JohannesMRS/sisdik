@@ -5,7 +5,7 @@ import '../models/user.dart';
 class ApiService {
   // Emulator Android: 10.0.2.2 | iOS simulator: localhost
   // HP fisik: pakai IP laptop, misal 192.168.1.10
-  static const String baseUrl = 'http://localhost:3000/api';
+  static const String baseUrl = 'http://192.168.18.16:3000/api';
 
   Future<List<User>> getUsers() async {
     final res = await http.get(Uri.parse('$baseUrl/users'));

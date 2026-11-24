@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Mobile (emulator)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "mobile",
+      "program": "lib/main.dart"
+    },
+    {
+      "name": "Mobile (HP fisik, adb reverse)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "mobile",
+      "program": "lib/main.dart",
+      "args": ["--dart-define=API_URL=http://localhost:3000/api"]
+    },
+    {
+      "name": "Mobile (HP fisik, WiFi)",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "mobile",
+      "program": "lib/main.dart",
+      "args": ["--dart-define=API_URL=http://192.168.1.10:3000/api"]
+    }
+  ]
+}
