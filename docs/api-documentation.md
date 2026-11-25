@@ -13,12 +13,12 @@ Kolom **Auth**: `-` publik, `JWT` butuh token, `S` mahasiswa, `L` dosen. Semua e
 ## Auth dan Profil (Phase 2)
 | Method | Path | Auth | Fungsi | Status |
 |---|---|---|---|---|
-| POST | /auth/login | - | Body `{identifier, password}` → `{token, expiresAt, user}` | ⬜ |
-| POST | /auth/logout ★ | JWT | Cabut sesi saat ini → `{data: null}` | ⬜ |
-| POST | /auth/change-password ★ | JWT | `{currentPassword, newPassword, confirmPassword}`, cabut semua sesi → `{data: null}` | ⬜ |
-| POST | /auth/forgot-password | - | `{identifier}`, selalu balasan generik → `{data: {}}` | ⬜ |
-| GET | /me ★ | JWT | Profil sendiri + `mustChangePassword` dan `biometricEnabled` untuk perangkat dari query `deviceId` | ⬜ |
-| GET | /me/password-histories | JWT | Riwayat (tanggal, jenis) | ⬜ |
+| POST | /auth/login | - | Body `{identifier, password}` → `{token, expiresAt, user}` | ✅ |
+| POST | /auth/logout ★ | JWT | Cabut sesi saat ini → `{data: null}` | ✅ |
+| POST | /auth/change-password ★ | JWT | `{currentPassword, newPassword, confirmPassword}`, cabut semua sesi → `{data: null}` | ✅ |
+| POST | /auth/forgot-password | - | `{identifier}`, selalu balasan generik → `{data: {}}` | ✅ |
+| GET | /me ★ | JWT | Profil sendiri + `mustChangePassword` dan `biometricEnabled` untuk perangkat dari query `deviceId` | ✅ |
+| GET | /me/password-histories | JWT | Riwayat (tanggal, jenis) | ✅ |
 
 ### Kontrak Auth
 - `expiresAt` berupa string ISO 8601 UTC, misalnya `2026-11-25T16:59:00Z`.

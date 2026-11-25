@@ -7,8 +7,9 @@ class AppTextField extends StatelessWidget {
   final bool obscureText;
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
+  final ValueChanged<String>? onChanged;
 
-  const AppTextField({super.key, required this.label, this.controller, this.errorText, this.obscureText = false, this.suffixIcon, this.keyboardType});
+  const AppTextField({super.key, required this.label, this.controller, this.errorText, this.obscureText = false, this.suffixIcon, this.keyboardType, this.onChanged});
 
   @override
   Widget build(BuildContext context) => Column(
@@ -16,7 +17,16 @@ class AppTextField extends StatelessWidget {
     children: [
       Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
       const SizedBox(height: 8),
-      TextField(controller: controller, obscureText: obscureText, keyboardType: keyboardType, decoration: InputDecoration(errorText: errorText, suffixIcon: suffixIcon)),
+      TextField(
+        controller: controller,
+        obscureText: obscureText,
+        keyboardType: keyboardType,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          errorText: errorText,
+          suffixIcon: suffixIcon,
+        ),
+      ),
     ],
   );
 }

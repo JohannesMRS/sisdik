@@ -12,7 +12,8 @@
     "migrate:down": "npm run migrate -- down",
     "migrate:create": "npm run migrate -- create",
     "create-user": "node scripts/create-user.js",
-    "import-users": "node scripts/import-users.js"
+    "import-users": "node scripts/import-users.js",
+    "reset-password": "node scripts/reset-password.js"
   },
   "keywords": [],
   "author": "",
