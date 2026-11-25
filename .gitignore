@@ -1,2 +1,29 @@
+# Environment dan rahasia
 .env
+.env.*
+!.env.example
+
+# Backend dependencies dan hasil eksekusi
 node_modules/
+backend-api/uploads/*
+!backend-api/uploads/.gitkeep
+*.log
+
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+
+# Backup database
+backup/
+backups/
+*.dump
+*.sql.gz
+
+# Editor dan OS
+.vscode/*.local
+.DS_Store
+Thumbs.db
