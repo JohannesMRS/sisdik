@@ -1,124 +1,73 @@
-# SISDIK — Rancangan Layar (UI Screens)
+# Instruksi untuk GitHub Copilot — SISDIK
 
-Dokumen ini menjelaskan **susunan setiap layar Flutter**: komponen, urutan, isi, state, dan aksi. Tujuannya agar tampilan konsisten dan Copilot tidak menebak tata letak.
-Aturan gaya dasar ada di `docs/context.md` bagian 8. Kontrak data ada di `docs/api-documentation.md`.
+SISDIK adalah aplikasi mobile sistem informasi akademik untuk mahasiswa dan dosen.
+Ini **MVP untuk tugas/demonstrasi**, bukan aplikasi produksi. Monorepo: Flutter + Express.js + PostgreSQL.
 
-> **Aturan:** implementasi layar mengikuti dokumen ini. Jika perlu menyimpang, tanyakan dulu, lalu perbarui dokumen ini. Setiap layar punya ID (A1, S1, L1, B1) untuk dirujuk di prompt dan commit.
+## Dokumen rujukan
+Selalu baca `docs/progress.md` dan file fase aktif. Dokumen lain dibaca **hanya bagian yang relevan** dengan tugas (yang disebut di prompt atau di file fase), jangan memuat semuanya setiap kali:
+1. `docs/context.md` — konteks, keputusan teknis, konvensi kode.
+2. `docs/progress.md` — status terkini, cari fase yang sedang aktif.
+3. `docs/phases/phase-N-*.md` — fase aktif (daftar tugas + kriteria selesai).
+4. `docs/prd-addendum.md` — keputusan yang melengkapi PRD.
+5. `docs/database-design.md` dan `docs/api-documentation.md` — kontrak data dan API.
+6. `docs/ui-screens.md` — rancangan layar Flutter (wajib untuk setiap pekerjaan UI).
 
----
+Urutan prioritas jika ada konflik: `docs/prd-addendum.md` > `docs/requirements.md` (PRD asli).
 
-## 0. Fondasi Visual
+## Alur kerja
+- Kerjakan **hanya fase aktif**. Jangan melompat ke fase berikutnya.
+- Kerjakan per fitur kecil, dari database sampai UI, lalu uji.
+- Setelah selesai satu tugas: centang di file fase dan perbarui `docs/progress.md`.
+- Endpoint baru atau yang berubah wajib dicatat di `docs/api-documentation.md`.
+- Jika ada hal yang tidak jelas atau di luar scope, **tanyakan**, jangan berasumsi.
+- Jangan menambah fitur di luar PRD (lihat daftar Out of Scope di `docs/context.md`).
+- **Penutup setiap tugas (otomatis, tidak perlu diminta di prompt):** sebutkan file yang dibuat/diubah, beri perintah uji, centang tugas di file fase, dan update `docs/progress.md`.
+- Perintah yang mengubah data atau database (`migrate`, `seed`, backup, restore) **jangan dijalankan sendiri**; berikan perintahnya.
+- Prompt bertanda `[Ask]` (tinjau, rencana, verifikasi, review) hanya melaporkan: **jangan mengubah file**.
 
-### 0.1 Token
-| Token | Nilai |
-|---|---|
-| Background | `#F8FAFC` |
-| Surface (kartu, sheet, dialog) | `#FFFFFF` |
-| Border halus | `#E2E8F0` (Slate 200), tebal 1 |
-| Teks utama | `#0F172A` |
-| Teks sekunder | `#64748B` |
-| Accent | `#2563EB` |
-| Sukses (teks status) | `#15803D` |
-| Peringatan/Error (teks status, pesan error) | `#DC2626` |
-| Spasi | kelipatan 4/8: 4, 8, 12, 16, 24, 32. Padding halaman 16 |
-| Radius | kartu dan tombol 12, bottom sheet atas 20 |
-| Bayangan | tidak dipakai (cukup border) agar tetap datar dan minimalis |
+## Struktur
+- `backend-api/` — Express.js, struktur `src/modules/<modul>/{routes,controller,service,schema}.js`
+- `mobile_app/` — Flutter, struktur `lib/{core,config,data,models,services,providers,routes,features}`
+- `docs/` — dokumentasi
 
-Warna Sukses dan Error **tambahan** dari palet PRD, hanya untuk teks status dan pesan error, bukan dekorasi. Proporsi accent tetap sekitar 10%.
+## Aturan backend
+- JavaScript (CommonJS), async/await, tanpa ORM, driver `pg`.
+- **Selalu** query parameterized (`$1, $2`). Dilarang menyusun SQL dengan string concatenation.
+- Validasi semua input dengan `zod` di layer `schema.js`.
+- Identitas dan role pengguna **hanya** dari JWT yang sudah diverifikasi (`req.user`), tidak pernah dari body/query/params.
+- Setiap endpoint privat: `authenticate` → `requireRole(...)` → `requirePasswordChanged`.
+- Cek kepemilikan data di query (misal `WHERE student_id = $1`), bukan hanya di UI.
+- Password: Argon2id, hanya di backend. Jangan pernah log password, hash, atau token.
+- Format respons dan error mengikuti `docs/context.md` bagian "Konvensi API".
+- **Skema database hanya diubah lewat file migrasi baru** di `backend-api/db/migrations/` (format `-- Up Migration` / `-- Down Migration`, panduan di bagian "Migrasi" pada `docs/database-design.md`). Jangan mengedit migrasi yang sudah dijalankan, jangan mengubah tabel langsung lewat `psql`, dan jangan memasukkan seed data ke dalam migrasi. Setelah skema berubah, perbarui `docs/database-design.md`.
+- Komentar kode dalam Bahasa Indonesia.
 
-### 0.2 Tipografi
-| Peran | Font | Ukuran / bobot |
-|---|---|---|
-| Judul layar | Manrope | 24 / 700 |
-| Judul bagian dan kartu | Manrope | 16–18 / 600 |
-| Isi dan data akademik | IBM Plex Sans | 14 / 400, baris 1.4 |
-| Keterangan (caption) | IBM Plex Sans | 12 / 400, warna sekunder |
-| Tombol | Manrope | 14 / 600 |
+## Aturan Flutter
+- State management: `provider`. Routing: `go_router`. HTTP: `dio` (satu instance di `core/`).
+- Token disimpan di `flutter_secure_storage`, bukan SharedPreferences.
+- Base URL dari `--dart-define=API_URL=...`, jangan hardcode.
+- UI: Clean & Minimalist, Light Mode saja, warna dan font sesuai `docs/context.md`.
+- Layar **harus mengikuti `docs/ui-screens.md`** (ID layar, urutan komponen, state, teks). Pakai widget bersama di `lib/core/widgets/`, jangan membuat ulang. Jika perlu menyimpang, tanyakan dan perbarui dokumen itu.
+- Tanpa badge. Wajib ada skeleton loading, error state, dan empty state untuk setiap data dari API.
+- Tidak ada animasi besar tanpa persetujuan.
+- Jangan menaruh logika keamanan/otorisasi di Flutter sebagai satu-satunya lapisan.
+- Komentar kode dalam Bahasa Indonesia.
 
-### 0.3 Komponen bersama (`lib/core/widgets/`)
-| Widget | Spesifikasi |
-|---|---|
-| `AppCard` | Surface putih, border halus, radius 12, padding 16, bisa diketuk (ripple halus) |
-| `PrimaryButton` | Tinggi 48, lebar penuh, accent, teks putih; state loading (spinner kecil) dan disabled |
-| `SecondaryButton` | Tinggi 48, outline accent, teks accent |
-| `AppTextField` | Label di atas, border halus, fokus berwarna accent, pesan error di bawah (warna Error) |
-| `StatusText` | Ikon kecil 16 + teks, **tanpa latar/pil/badge**. Lihat 0.4 |
-| `SkeletonBox` / `SkeletonCard` | `shimmer` abu muda; jumlah dan bentuk menyerupai konten asli |
-| `EmptyState` | Ilustrasi sederhana (ikon besar 64, warna sekunder) + judul + keterangan |
-| `ErrorState` | Ikon + pesan ramah + tombol "Coba lagi" |
-| `ConfirmDialog` | Judul, isi singkat, tombol Batal dan aksi; aksi destruktif bertuliskan jelas (warna Error) |
-| `AppBottomSheet` | Handle di atas, radius atas 20, judul, isi |
+## Keamanan (tidak boleh dilanggar)
+- Dilarang SHA-256 atau hash cepat untuk password. Gunakan Argon2id.
+- Jangan commit `.env`, file di `backend-api/uploads/`, atau kredensial.
+- Upload file wajib divalidasi tipe dan ukuran di backend.
+- Mahasiswa tidak boleh mengubah IPK, NIM, atau mata kuliah, lewat endpoint mana pun.
 
-### 0.4 Status tugas (teks saja)
-| Status | Ikon | Warna |
-|---|---|---|
-| Belum dikumpulkan | `schedule` | Teks sekunder |
-| Sudah dikumpulkan | `check_circle_outline` | Sukses |
-| Lewat deadline | `error_outline` | Error |
+## Prioritas Dokumentasi
 
-### 0.5 Format tampilan
-- Tanggal dan jam memakai `intl` locale `id_ID`, zona WIB. Contoh: `Jum, 28 Nov 2026 · 23.59 WIB`.
-- Sisa waktu sebagai teks sekunder: `2 hari lagi`, `5 jam lagi`, `Sudah lewat`.
-- IPK tampil dua desimal. Jadwal: `Senin · 08.00–09.40 · Ruang A101`.
+Jika ditemukan konflik:
+1. PRD Addendum: keputusan kebutuhan dan business rules.
+2. Security Design: mekanisme keamanan.
+3. Database Design: struktur dan relasi database.
+4. API Documentation: kontrak endpoint dan respons.
+5. UI Screens: spesifikasi tampilan.
+6. Phase Document: ruang lingkup implementasi fase.
 
-### 0.6 Pola state untuk setiap layar yang memuat data
-1. **Loading:** skeleton berbentuk seperti konten (bukan spinner di tengah).
-2. **Error:** `ErrorState` dengan pesan sesuai kode error, tombol "Coba lagi" memuat ulang.
-3. **Empty:** `EmptyState` dengan teks khusus layar.
-4. **Isi:** daftar/konten. Layar daftar mendukung tarik-untuk-muat-ulang.
-5. Error 401 ditangani global (dialog A5), bukan per layar.
-
-Pesan error (Indonesia): koneksi gagal → "Tidak dapat terhubung ke server. Periksa koneksi lalu coba lagi."; 500/503 → "Terjadi gangguan pada server. Coba lagi sebentar lagi."; 404 → "Data tidak ditemukan."
-
-### 0.7 Navigasi
-- Bottom navigation 3 tab: **Home** (`home_outlined`), **Courses** (`menu_book_outlined`), **Profile** (`person_outline`). Tab aktif memakai accent, tab lain warna sekunder, label selalu tampil.
-- Struktur sama untuk mahasiswa dan dosen, isi layarnya berbeda. Dibangun dengan `go_router` (`StatefulShellRoute`) agar posisi tab tersimpan.
-- Layar detail dibuka di atas shell dengan app bar dan tombol kembali. Bottom nav disembunyikan di layar detail dan form.
-- Transisi: bawaan Material (sederhana). Tidak ada animasi besar.
-
----
-
-## 1. Auth (Phase 2)
-
-### A1. Splash
-- Logo teks "SISDIK" (Manrope 700, accent) di tengah, di atas Background.
-- Aksi: cek token tersimpan lewat `GET /me` sambil mempertahankan layar Splash. Berhasil → shell sesuai `role` (atau A4 bila `mustChangePassword=true`). Gagal/tidak ada token → A2. Setiap 401 dari proses ini ditangani sebagai sesi berakhir dan membuka A5.
-
-### A2. Login
-```
-         SISDIK
-   Sistem Informasi Akademik
-
-   NIM / NIP
-   [____________________]
-   Password
-   [______________ (mata)]
-
-   [        Masuk        ]
-   [ Masuk dengan wajah  ]   <- hanya jika B2 terpenuhi
-          Lupa password?
-```
-- Padding atas besar (logo di sepertiga atas), form dalam satu kolom, tanpa kartu.
-- Validasi: kedua field wajib. Tombol Masuk loading saat request dan dikunci untuk mencegah pengiriman berulang.
-- Error `INVALID_CREDENTIALS` tampil di bawah form: "NIM/NIP atau password salah." (satu pesan untuk semua kasus). Akun tidak aktif juga menggunakan pesan ini.
-- 403 `PASSWORD_CHANGE_REQUIRED` setelah login mengarah ke A4 dan bukan ditampilkan sebagai error form.
-- Kegagalan koneksi, 500/503, dan error lain mengikuti pesan umum 0.6.
-- "Lupa password?" → A3.
-
-### A3. Lupa Password
-- App bar "Lupa Password". Teks penjelas: "Masukkan NIM/NIP. Permintaan akan diteruskan, lalu kamu akan menerima password sementara."
-- Field NIM/NIP, tombol "Kirim Permintaan". Tombol loading saat request dan dikunci selama proses.
-- Setelah kirim: tampil state sukses di layar yang sama (ikon centang, pesan generik: "Jika NIM/NIP terdaftar, permintaan reset sudah dicatat. Hubungi pengelola untuk menerima password sementara."), tombol "Kembali ke Login". Pesan sama baik akun ada maupun tidak.
-- Kegagalan koneksi atau 500/503 mengikuti pesan umum 0.6; 400 `VALIDATION_ERROR` ditampilkan pada field NIM/NIP.
-
-### A4. Ganti Password Wajib
-- Tanpa tombol kembali dan tanpa bottom nav. Teks: "Demi keamanan, ganti password awal sebelum melanjutkan."
-- Field: Password lama, Password baru, Konfirmasi password baru (masing-masing dengan tombol tampil/sembunyi).
-- Di bawah field baru: daftar aturan (min 8 karakter, huruf dan angka, tidak sama dengan password lama atau identifier, maks 72 karakter) yang menjadi teks sekunder dan berubah warna Sukses saat terpenuhi.
-- Validasi konfirmasi password dan setiap aturan dilakukan di klien; respons `VALIDATION_ERROR` ditampilkan pada field terkait.
-- Tombol "Simpan Password" loading saat request dan dikunci selama proses.
-- Sukses → semua sesi dicabut → dialog singkat "Password diubah. Silakan masuk kembali." → A2.
-
-### A5. Dialog Sesi Berakhir
-- `ConfirmDialog` satu tombol, tidak bisa ditutup dengan ketuk di luar. Judul "Sesi berakhir", isi "Silakan masuk kembali.", tombol "Masuk".
-- Terbuka untuk respons 401 dari endpoint privat, termasuk `TOKEN_EXPIRED` dan `TOKEN_REVOKED`. Tombol Menghapus token lokal (dan hanya token sesi yang sesuai) lalu membuka A2.
+Jika konflik menyangkut keputusan lintas dokumen,
+jangan mengambil keputusan sendiri. Laporkan dan tanyakan.
