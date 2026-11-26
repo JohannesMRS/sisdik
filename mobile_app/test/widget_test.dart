@@ -18,6 +18,7 @@ void main() {
 
   testWidgets('Bottom navigation tiga tab ditampilkan', (WidgetTester tester) async {
     await tester.pumpWidget(const MaterialApp(home: MainShellScreen()));
+    await tester.pump(const Duration(seconds:11));
 
     expect(find.text('Home'), findsWidgets);
     expect(find.text('Courses'), findsOneWidget);

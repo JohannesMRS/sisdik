@@ -6,6 +6,8 @@ import '../features/auth/change_password_screen.dart';
 import '../features/auth/session_expired_screen.dart';
 import '../features/main_shell_screen.dart';
 import '../features/auth/splash_screen.dart';
+import '../features/student/course_detail_screen.dart';
+import '../features/student/assignment_detail_screen.dart';
 
 GoRouter createAppRouter(AuthProvider auth) {
   return GoRouter(
@@ -37,6 +39,8 @@ GoRouter createAppRouter(AuthProvider auth) {
       GoRoute(path: '/change-password', builder: (context, state) => const ChangePasswordScreen()),
       GoRoute(path: '/home', builder: (context, state) => const MainShellScreen()),
       GoRoute(path: '/session-expired', builder: (context, state) => const SessionExpiredScreen()),
+      GoRoute(path: '/courses/:courseId', builder: (context, state) => CourseDetailScreen(courseId: state.pathParameters['courseId']!)),
+      GoRoute(path: '/assignments/:assignmentId', builder: (context, state) => AssignmentDetailScreen(assignmentId: state.pathParameters['assignmentId']!)),
     ],
   );
 }

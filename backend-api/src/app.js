@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const healthRoutes = require('../src/routes/health.routes');
 const authRoutes = require('./modules/auth/routes');
+const studentRoutes = require('./modules/students/routes');
 const { notFoundHandler, errorHandler } = require('../src/middlewares/errorHandler');
 
 const app = express();
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use('/api/v1', healthRoutes);
 app.use('/api/v1', authRoutes);
+app.use('/api/v1', studentRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 

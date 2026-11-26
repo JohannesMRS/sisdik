@@ -10,7 +10,7 @@
 |---|---|---|---|
 | 1 | Foundation | ✅ Selesai | [phase-1](phases/phase-1-foundation.md) |
 | 2 | Authentication & Security | ✅ Selesai | [phase-2](phases/phase-2-auth-security.md) |
-| 3 | Student Module | ⬜ Belum | [phase-3](phases/phase-3-student-module.md) |
+| 3 | Student Module | 🟡 Berjalan | [phase-3](phases/phase-3-student-module.md) |
 | 4 | Lecturer Module | ⬜ Belum | [phase-4](phases/phase-4-lecturer-module.md) |
 | 5 | Biometric Security | ⬜ Belum | [phase-5](phases/phase-5-biometric.md) |
 | 6 | Testing & Security Validation | ⬜ Belum | [phase-6](phases/phase-6-testing-validation.md) |
@@ -35,6 +35,7 @@ Legenda: ⬜ belum, 🟡 berjalan, ✅ selesai (semua goals terpenuhi).
 
 ## Yang Sedang Dikerjakan
 - Phase 2: backend auth/session/password dan Flutter auth A1–A5 telah diimplementasikan serta diuji otomatis. Backend 14/14 test lulus dan Flutter analyze/2 widget test lulus. Akun 2405102086 berhasil diuji login dan ganti password; logout/expiry, lupa password end-to-end, dan role lintas endpoint belum terverifikasi penuh.
+- Phase 3: API dan layar mahasiswa telah diimplementasikan; spesifikasi S1–S7 ditambahkan ke `docs/ui-screens.md`. Backend 19/19 test lulus; Flutter analyze tidak menemukan issue dan 2 widget test lulus. Satu goal masih terbuka: alur end-to-end upload pada perangkat HP harus diuji dengan akun demo dan server lokal.
 
 ## Hambatan / Keputusan Terbuka
 - Akun demo `2301001` memiliki hash Argon2id tetapi tidak cocok dengan password `Awal12345`; jalankan `npm run reset-password -- --identifier=2301001` untuk mendapat password sementara acak, lalu uji perubahan password dan login ulang.
@@ -55,3 +56,5 @@ Legenda: ⬜ belum, 🟡 berjalan, ✅ selesai (semua goals terpenuhi).
 | 2026-11-25 | Placeholder bottom navigation 3 tab (Home/Courses/Profile) ditambahkan beserta tombol logout sementara; widget test login dan shell kedua-duanya lulus. |
 | 2026-11-25 | Verifikasi lanjutan Phase 2: backend 14 test lulus, Flutter analyze dan 2 widget test lulus, A1 Splash serta state hide/show/rule A4 diperbaiki, dan riwayat password membedakan `forced_change`/`self_change`. Akun 2405102086 berhasil login lalu ganti password dan `must_change_password=false`; uji lupa/reset, logout/expiry HP, dan role lintas endpoint tetap terbuka. |
 | 2026-11-25 | Phase 2 dinyatakan selesai setelah pengujian login, lupa/reset password, ganti password, logout, sessi kedaluwarsa, role lintas endpoint, dan layar A1–A5 pada backend/mobile berhasil. |
+| 2026-11-26 | Implementasi backend Phase 3 ditambahkan: endpoint mahasiswa Home/Courses/Detail Tugas/upload/riwayat, filter kepemilikan, validasi PDF/DOCX/ZIP, batas 10 MB, UUID, SHA-256, transaksi versi terbaru, dan audit akses ditolak. Backend 19/19 test lulus. Mobile belum dilanjutkan karena rancangan `docs/ui-screens.md` saat ini tidak memuat S1–S7 Mahasiswa. |
+| 2026-11-26 | Implementasi Mobile Phase 3 ditambahkan: S1–S7 dirumuskan, layanan API mahasiswa, Home/Courses/Detail MK/Detail Tugas/Profile, pemilihan file, konfirmasi, progres upload, serta state loading/error/empty. Flutter analyze lulus dan 2 widget test lulus; uji alur end-to-end di HP masih terbuka. |

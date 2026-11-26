@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'home_placeholder_screen.dart';
-import 'courses_placeholder_screen.dart';
-import 'profile_placeholder_screen.dart';
+import 'student/home_screen.dart';
+import 'student/courses_screen.dart';
+import 'student/profile_screen.dart';
 
 class MainShellScreen extends StatefulWidget {
   const MainShellScreen({super.key});
@@ -12,7 +12,7 @@ class MainShellScreen extends StatefulWidget {
 
 class _MainShellScreenState extends State<MainShellScreen> {
   int index = 0;
-  final pages = const [HomePlaceholderScreen(), CoursesPlaceholderScreen(), ProfilePlaceholderScreen()];
+  final pages = const [HomeScreen(), CoursesScreen(), ProfileScreen()];
 
   @override
   Widget build(BuildContext context) => Scaffold(

@@ -37,12 +37,12 @@ Kolom **Auth**: `-` publik, `JWT` butuh token, `S` mahasiswa, `L` dosen. Semua e
 ## Mahasiswa (Phase 3)
 | Method | Path | Auth | Fungsi | Status |
 |---|---|---|---|---|
-| GET | /student/home/assignments | S | Tugas terbaru sesuai D-12 | ⬜ |
-| GET | /student/courses | S | Daftar MK, dikelompokkan per semester | ⬜ |
-| GET | /student/courses/:courseId | S | Detail MK + jadwal + daftar tugas | ⬜ |
-| GET | /student/assignments/:assignmentId | S | Detail tugas + status | ⬜ |
-| POST | /student/assignments/:assignmentId/submissions | S | Upload (`multipart/form-data`, field `file`) | ⬜ |
-| GET | /student/assignments/:assignmentId/submissions | S | Riwayat pengumpulan sendiri | ⬜ |
+| GET | /student/home/assignments | S | Tugas terbaru sesuai D-12 | ✅ |
+| GET | /student/courses | S | Daftar MK, dikelompokkan per semester | ✅ |
+| GET | /student/courses/:courseId | S | Detail MK + jadwal + daftar tugas | ✅ |
+| GET | /student/assignments/:assignmentId | S | Detail tugas + status | ✅ |
+| POST | /student/assignments/:assignmentId/submissions | S | Upload (`multipart/form-data`, field `file`) | ✅ |
+| GET | /student/assignments/:assignmentId/submissions | S | Riwayat pengumpulan sendiri | ✅ |
 
 ## Dosen (Phase 4)
 | Method | Path | Auth | Fungsi | Status |

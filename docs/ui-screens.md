@@ -59,6 +59,78 @@ Urutan prioritas jika ada konflik: `docs/prd-addendum.md` > `docs/requirements.m
 - Upload file wajib divalidasi tipe dan ukuran di backend.
 - Mahasiswa tidak boleh mengubah IPK, NIM, atau mata kuliah, lewat endpoint mana pun.
 
+## Mahasiswa — Phase 3
+
+Aturan bersama:
+- Light mode, Background `#F8FAFC`, Surface `#FFFFFF`, teks `#0F172A`, sekunder `#64748B`, accent `#2563EB`.
+- Tidak memakai badge. Status ditampilkan sebagai teks.
+- Setiap data API memakai skeleton saat loading, tombol "Coba lagi" pada error, dan empty state yang relevan.
+
+### S1 — Home
+Urutan komponen:
+1. AppBar berjudul `Home`.
+2. Daftar kartu tugas maksimal sesuai respons API.
+3. Setiap kartu menampilkan kode/nama MK, judul tugas, deskripsi singkat, deadline, dan status teks.
+4. Ketuk kartu membuka S4 Detail Tugas.
+- Loading: skeleton kartu.
+- Error: `Terjadi kesalahan. Coba lagi.` beserta tombol `Coba lagi`.
+- Empty: judul `Tidak ada tugas untuk saat ini.` dan deskripsi `Belum ada tugas yang perlu ditinjau.`
+
+### S2 — Courses
+Urutan komponen:
+1. AppBar berjudul `Courses`.
+2. Daftar dikelompokkan per `semester`, masing-masing dengan istilah akademik dari API.
+3. Setiap kartu MK menampilkan kode, nama, dan SKS.
+4. Ketuk kartu membuka S3 Detail Mata Kuliah.
+- Loading: skeleton kelompok dan kartu.
+- Error: tombol `Coba lagi`.
+- Empty: `Belum ada mata kuliah yang diambil.`
+
+### S3 — Detail Mata Kuliah
+Urutan komponen:
+1. AppBar dengan nama atau kode MK.
+2. Informasi kode, nama, dosen pengampu, SKS, dan semester.
+3. Bagian `Jadwal` berisi hari, jam, dan ruang untuk setiap sesi.
+4. Bagian `Tugas` berisi daftar tugas MK beserta deadline dan status teks.
+5. Ketuk tugas membuka S4 Detail Tugas.
+- Loading: skeleton pada seluruh bagian.
+- Error: tombol `Coba lagi`.
+- Empty jadwal/tugas: pesan relevan tanpa badge.
+
+### S4 — Detail Tugas
+Urutan komponen:
+1. AppBar berjudul `Detail Tugas`.
+2. Kode/nama MK, judul tugas, deskripsi, deadline, dan status teks.
+3. Bagian `Riwayat Pengumpulan` berisi nama file, waktu pengumpulan, ukuran, dan penanda versi terbaru sebagai teks.
+4. Tombol `Pilih File`.
+5. Setelah file dipilih, tampilkan nama file dan ukuran.
+6. Tombol `Kirim`.
+- Jenis diizinkan: PDF, DOCX, ZIP; maksimal 10 MB.
+- Validasi file di klien hanya untuk kenyamanan dan tetap diverifikasi oleh backend.
+- Sebelum kirim, tampilkan dialog konfirmasi berisi nama file.
+- Setelah konfirmasi, tampilkan progres upload dan tombol kirim dinonaktifkan.
+- Setelah berhasil, muat ulang detail/riwayat dan tampilkan status `Sudah dikumpulkan`.
+- Loading: skeleton.
+- Error: pesan backend yang aman dan tombol `Coba lagi` bila pengambilan gagal.
+- Empty riwayat: `Belum ada file dikumpulkan.`
+
+### S5 — Profile
+Urutan komponen:
+1. AppBar berjudul `Profile`.
+2. Nama, NIM, dan IPK dua angka desimal.
+3. Bagian `Riwayat Perubahan Password` dari `/me/password-histories`.
+4. Tombol `Ganti Password` menuju layar perubahan password.
+5. Bagian biometric placeholder menyatakan `Biometric` dan `Belum dikonfigurasi` tanpa fungsi pada Phase 3.
+6. Tombol `Keluar`.
+- Ketuk Keluar membuka dialog konfirmasi.
+- Loading/error/empty mengikuti aturan bersama.
+
+### S6 — Loading, Error, dan Empty
+Gunakan widget bersama `SkeletonCard`, `ErrorState`, dan `EmptyState`. Skeleton dipakai saat API berjalan, bukan placeholder statis.
+
+### S7 — Bottom Navigation
+Navigasi tetap: `Home`, `Courses`, `Profile`. Tidak memakai tab atau badge tambahan untuk status tugas.
+
 ## Prioritas Dokumentasi
 
 Jika ditemukan konflik:
